@@ -19,10 +19,13 @@ import java.io.IOException;
 public class DemoController {
 
     @Autofired
-    DemoService demoService;
+    public IDemoService demoService;
     @RequestMapping("/test")
     public void test() throws IOException {
-        //demoService.getInfo("我是张君哦");
+
+        System.out.println(demoService+"        demoservice");
+
+        System.out.println(demoService.getInfo("我是张君哦"));
 
         System.out.println("我走了");
 

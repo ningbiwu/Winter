@@ -131,12 +131,30 @@ public class DispatcherServlet extends HttpServlet {
 
         for (Map.Entry<String, Object> entry : instanceMap.entrySet()) {
             for (Field field : entry.getValue().getClass().getDeclaredFields()) {
-                DI(entry.getValue(),field);
+                //DI(entry.getValue().getClass(),field);
+                System.out.println(field.getName()+"     当前字段名"+field.isAnnotationPresent(Autofired.class)+"        -----");
+                if(field.isAnnotationPresent(Autofired.class)){
+                    try {
+
+                        System.out.println("为   "+entry.getKey()+"          -------------注入"+field.getName());
+                        field.setAccessible(true);
+                        //-------------------
+                        System.out.println(field.getType().getName()+"       这是从字段得到的类全名");
+                        for(String key:instanceMap.keySet()){
+                            System.out.println("      <->      key"+key);
+                        }
+                        System.out.println(instanceMap.get(field.getType().getName())+"    从instancemap拿到的");
+                        field.set(entry.getValue(),instanceMap.get(field.getType().getName()));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         }
     }
 
-    private void DI(Object parentObj,Field field) {
+    private void DI(Class parentObj,Field field) {
 
         field.setAccessible(true);
         //System.out.println(field.getName()+"-             -"+field.isAnnotationPresent(Autofired.class)+"        -------字 段名字");
@@ -168,11 +186,11 @@ public class DispatcherServlet extends HttpServlet {
             try {
                 instanceMap.put(c.getName(), c.newInstance());
 
-                System.out.println(c.getName()+" 名字放进去了");
+                System.out.println(c.getName()+" 名字放进去了"+c.newInstance());
 
                 Class[] interfaces = c.getInterfaces();
                 for(Class cc:interfaces){
-                    instanceMap.put(cc.getName(),setInstance(cc.newInstance(),c));
+                    instanceMap.put(cc.getName(),c.newInstance());
                 }
 
             } catch (InstantiationException e) {
