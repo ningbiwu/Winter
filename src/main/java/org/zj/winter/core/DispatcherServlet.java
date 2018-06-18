@@ -1,9 +1,9 @@
 package org.zj.winter.core;
 
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLBoundOperation;
-import javafx.beans.value.ObservableObjectValue;
-import org.omg.CORBA.ARG_OUT;
-import org.zj.winter.annotation.*;
+import org.zj.winter.annotation.Autofired;
+import org.zj.winter.annotation.BasePackage;
+import org.zj.winter.annotation.Controller;
+import org.zj.winter.annotation.RequestMapping;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -104,6 +103,9 @@ public class DispatcherServlet extends HttpServlet {
         setMapping();
     }
 
+    /**
+     * 扫描controller，设置url和方法的映射关系用于调用
+     */
     private void setMapping() {
         //扫描所有controller
         for(Map.Entry<String,Object> entry:instanceMap.entrySet()){
@@ -125,6 +127,9 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 对容器里的class进行注入
+     */
     private void doDI() {
 
         System.out.println(instanceMap.size()+"---------instance map size");
@@ -154,6 +159,11 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 对指定类进行递归注入
+     * @param parentObj
+     * @param field
+     */
     private void DI(Class parentObj,Field field) {
 
         field.setAccessible(true);
@@ -181,6 +191,9 @@ public class DispatcherServlet extends HttpServlet {
     }
 
 
+    /**
+     * 对class进行初始化
+     */
     private void getInstance() {
         for (Class c : classes) {
             try {
@@ -219,6 +232,9 @@ public class DispatcherServlet extends HttpServlet {
     }
 
 
+    /**
+     * 扫描所有包放到容器里
+     */
     private void getClazz() {
         for (String pack : packages) {
             String replace = pack.replace(".", "/");
@@ -230,6 +246,11 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 将类通过反射得到引用，然后放到容器
+     * @param classes
+     * @param file
+     */
     private void inflateClazz(List<Class<?>> classes, File file) {
         System.out.println(file.getAbsolutePath()+"路径");
 
@@ -261,6 +282,10 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 扫描配置的包
+     * @throws URISyntaxException
+     */
     private void getScanPackage() throws URISyntaxException {
         //获得Config类,获得对应注解上面的值
         String path = getSrcPath();
@@ -286,6 +311,11 @@ public class DispatcherServlet extends HttpServlet {
 
     }
 
+    /**
+     * 根据URL调用对应方法
+     * @param req
+     * @param resp
+     */
     private void handleMapping(HttpServletRequest req, HttpServletResponse resp) {
         //去存储了url和方法映射的容器里找方法并反射调用
         String requestURI = req.getRequestURI();
@@ -317,6 +347,10 @@ public class DispatcherServlet extends HttpServlet {
         System.out.println(requestURI + "        --------请求路径");
     }
 
+    /**
+     * 获得源码的绝对路径
+     * @return
+     */
     private String getSrcPath() {
         String path = null;
         try {
