@@ -5,4 +5,7 @@ package org.zj.winter.service;
  */
 public interface IDemoService {
     String getInfo(String name);
+
+    void print();
+
 }

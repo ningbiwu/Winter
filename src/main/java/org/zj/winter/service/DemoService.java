@@ -20,4 +20,9 @@ public class DemoService implements IDemoService {
         childService.hh();
         return "你好啊"+name;
     }
+
+    @Override
+    public void print() {
+        System.out.println("你懂得-->");
+    }
 }

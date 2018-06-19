@@ -3,12 +3,9 @@ package org.zj.winter.controller;
 import org.zj.winter.annotation.Autofired;
 import org.zj.winter.annotation.Controller;
 import org.zj.winter.annotation.RequestMapping;
-import org.zj.winter.annotation.RequestParam;
-import org.zj.winter.service.DemoService;
+import org.zj.winter.service.ChildService;
 import org.zj.winter.service.IDemoService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -20,15 +17,17 @@ public class DemoController {
 
     @Autofired
     public IDemoService demoService;
+
+    @Autofired
+    public ChildService childService;
     @RequestMapping("/test")
     public void test() throws IOException {
 
-        System.out.println(demoService+"        demoservice");
+        childService.hh();
 
-        System.out.println(demoService.getInfo("我是张君哦"));
+        demoService.print();
 
-        System.out.println("我走了");
-
+        //demoService.getInfo("你懂得啊");
         //response.getWriter().write(demoService.getInfo(name));
     }
 

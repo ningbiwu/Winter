@@ -2,7 +2,7 @@ package org.zj.winter.aspect;
 
 import org.zj.winter.annotation.After;
 import org.zj.winter.annotation.Aspect;
-import org.zj.winter.annotation.Befoer;
+import org.zj.winter.annotation.Before;
 import org.zj.winter.annotation.Condition;
 
 /**
@@ -17,14 +17,19 @@ import org.zj.winter.annotation.Condition;
  * Map<String,Invoke>map
  */
 @Aspect
-@Condition("")
+@Condition("org.zj.winter.service")
 public class TestAspect {
     @After
     public void after(){
         System.out.println("之后");
     }
-    @Befoer
+    @Before
     public void before(){
         System.out.println("之前");
+    }
+
+    @Before
+    public void b(){
+        System.out.println("我也是之前");
     }
 }
